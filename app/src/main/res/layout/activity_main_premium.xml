@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/premium_background">
+
+        <!-- Premium Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/premium_gradient_header"
+            app:contentInsetStart="0dp"
+            app:contentInsetEnd="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="CasHIA"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.1"/>
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="@mipmap/ic_launcher_round"
+                    android:outlineProvider="none"
+                    android:elevation="4dp"/>
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Premium Welcome Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="12dp"
+                    app:cardCornerRadius="28dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/premium_gradient_header"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:id="@+id/welcomeText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Welcome back,"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/white"
+                            android:alpha="0.9"/>
+
+                        <TextView
+                            android:id="@+id/usernameText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Username"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/white"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="12dp"/>
+
+                        <View
+                            android:layout_width="60dp"
+                            android:layout_height="3dp"
+                            android:background="@android:color/white"
+                            android:alpha="0.5"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Premium Balance Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="8dp"
+                    app:cardCornerRadius="24dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="24dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Your Balance"
+                                android:textSize="14sp"
+                                android:textColor="@color/premium_text_secondary"/>
+
+                            <TextView
+                                android:id="@+id/coinBalanceText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💰 0 coins"
+                                android:textSize="32sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/premium_primary"
+                                android:layout_marginTop="4dp"/>
+
+                            <TextView
+                                android:id="@+id/streakText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🔥 0 day streak"
+                                android:textSize="14sp"
+                                android:textColor="@color/premium_secondary"
+                                android:layout_marginTop="8dp"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/premium_coin_stack"
+                            android:alpha="0.8"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Premium Daily Login Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/dailyLoginCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="@color/premium_secondary"
+                    android:onClick="claimDailyLogin">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Daily Login Bonus"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"/>
+
+                            <TextView
+                                android:id="@+id/dailyBonusText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Claim your +10 coins"
+                                android:textSize="14sp"
+                                android:textColor="@android:color/white"
+                                android:alpha="0.9"/>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/dailyLoginButton"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#33FFFFFF"
+                            android:text="→"
+                            android:textSize="24sp"
+                            android:textColor="@android:color/white"
+                            android:gravity="center"
+                            android:clickable="true"
+                            android:focusable="true"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Premium Games Section Title -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🎮 Play &amp; Earn"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/premium_text_primary"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Premium Games Grid -->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="2"
+                    android:layout_marginBottom="16dp">
+
+                    <!-- Watch Ads -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/watchAdsCard"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="6dp"
+                        app:cardElevation="4dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardBackgroundColor="@color/premium_ad"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:text="📺"
+                                android:textSize="36sp"
+                                android:gravity="center"
+                                android:background="@drawable/circle_background"
+                                android:backgroundTint="#33FFFFFF"
+                                android:layout_marginBottom="12dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Watch Ads"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="+2 coins"
+                                android:textSize="13sp"
+                                android:textColor="@android:color/white"
+                                android:alpha="0.9"/>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Scratch Cards -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/scratchCardCard"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="6dp"
+                        app:cardElevation="4dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardBackgroundColor="@color/premium_scratch"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:text="🎴"
+                                android:textSize="36sp"
+                                android:gravity="center"
+                                android:background="@drawable/circle_background"
+                                android:backgroundTint="#33FFFFFF"
+                                android:layout_marginBottom="12dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Scratch Cards"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1-5 coins"
+                                android:textSize="13sp"
+                                android:textColor="@android:color/white"
+                                android:alpha="0.9"/>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Card Flip -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardFlipCard"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="6dp"
+                        app:cardElevation="4dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardBackgroundColor="@color/premium_cardflip"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:text="🃏"
+                                android:textSize="36sp"
+                                android:gravity="center"
+                                android:background="@drawable/circle_background"
+                                android:backgroundTint="#33FFFFFF"
+                                android:layout_marginBottom="12dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Card Flip"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2-5 coins"
+                                android:textSize="13sp"
+                                android:textColor="@android:color/white"
+                                android:alpha="0.9"/>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Jackpot -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/jackpotCard"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="6dp"
+                        app:cardElevation="4dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardBackgroundColor="@color/premium_jackpot"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:text="🎰"
+                                android:textSize="36sp"
+                                android:gravity="center"
+                                android:background="@drawable/circle_background"
+                                android:backgroundTint="#33FFFFFF"
+                                android:layout_marginBottom="12dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Jackpot"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Win BIG!"
+                                android:textSize="13sp"
+                                android:textColor="@android:color/white"
+                                android:alpha="0.9"/>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </GridLayout>
+
+                <!-- Premium Version Badge -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CasHIA 0.0.1"
+                    android:textSize="12sp"
+                    android:textColor="@color/premium_text_tertiary"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!-- Navigation Drawer (same as before) -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_premium"
+        app:menu="@menu/nav_menu"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        android:background="@color/premium_primary_dark"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

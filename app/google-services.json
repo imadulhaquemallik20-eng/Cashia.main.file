@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "26420804106",
+    "project_id": "cashia-2",
+    "storage_bucket": "cashia-2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26420804106:android:decf5bda20688a4a03bdf3",
+        "android_client_info": {
+          "package_name": "com.hia.cashia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArL6pouxkh7lhH51XCBBlQW-fxfaYF-Fc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

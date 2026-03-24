@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jackpot Machine"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#F44336"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Stats Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/coinBalanceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💰 Loading..."
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFA000"
+                    android:layout_marginBottom="12dp"/>
+
+                <TextView
+                    android:id="@+id/statsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Loading stats..."
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:lineSpacingExtra="4dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Slot Machine -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="#333333">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Reels -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/reel1Text"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:text="🍒"
+                        android:textSize="60sp"
+                        android:gravity="center"
+                        android:background="@android:color/white"
+                        android:layout_margin="4dp"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:id="@+id/reel2Text"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:text="🍋"
+                        android:textSize="60sp"
+                        android:gravity="center"
+                        android:background="@android:color/white"
+                        android:layout_margin="4dp"
+                        android:padding="8dp"/>
+
+                    <TextView
+                        android:id="@+id/reel3Text"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:text="🍊"
+                        android:textSize="60sp"
+                        android:gravity="center"
+                        android:background="@android:color/white"
+                        android:layout_margin="4dp"
+                        android:padding="8dp"/>
+
+                </LinearLayout>
+
+                <!-- Spin Button -->
+                <Button
+                    android:id="@+id/spinButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="SPIN (1 coin)"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#F44336"
+                    android:layout_marginBottom="8dp"/>
+
+                <!-- Result Text -->
+                <TextView
+                    android:id="@+id/resultText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Paytable -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="💰 Paytable (3 of a kind):"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="12dp"/>
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="4">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🍒 Cherries"
+                        android:textSize="14sp"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="2 coins"
+                        android:textSize="14sp"
+                        android:textColor="#4CAF50"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🍋 Lemons"
+                        android:textSize="14sp"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="3 coins"
+                        android:textSize="14sp"
+                        android:textColor="#4CAF50"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🍊 Oranges"
+                        android:textSize="14sp"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="4 coins"
+                        android:textSize="14sp"
+                        android:textColor="#4CAF50"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="🍇 Grapes"
+                        android:textSize="14sp"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="5 coins"
+                        android:textSize="14sp"
+                        android:textColor="#4CAF50"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💰 Money Bag"
+                        android:textSize="14sp"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="10 coins"
+                        android:textSize="14sp"
+                        android:textColor="#4CAF50"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="💎 Diamond"
+                        android:textSize="14sp"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="15 coins"
+                        android:textSize="14sp"
+                        android:textColor="#4CAF50"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="7️⃣ Seven"
+                        android:textSize="14sp"
+                        android:padding="4dp"
+                        android:textStyle="bold"
+                        android:textColor="#F44336"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:text="20 coins (JACKPOT!)"
+                        android:textSize="14sp"
+                        android:textColor="#F44336"
+                        android:textStyle="bold"
+                        android:padding="4dp"/>
+
+                </GridLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="\n• 1 coin per spin\n• Max 50 spins per day\n• Max 100 coins winnings per day"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="12dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔙 Back to Main"
+            android:textSize="14sp"
+            android:backgroundTint="#757575"/>
+
+    </LinearLayout>
+
+</ScrollView>

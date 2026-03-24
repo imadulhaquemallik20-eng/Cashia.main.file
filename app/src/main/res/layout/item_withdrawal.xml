@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/withdrawalCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="12dp"
+    android:layout_margin="4dp"
+    app:cardBackgroundColor="@color/card_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header with ID and Status -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/withdrawalIdText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ID: ABC123..."
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"/>
+
+            <TextView
+                android:id="@+id/statusBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:text="PENDING"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:background="@drawable/rounded_badge"/>
+
+        </LinearLayout>
+
+        <!-- Amount Details -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/withdrawalAmountText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="100 coins"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"/>
+
+            <TextView
+                android:id="@+id/withdrawalCashText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹10"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/coin_gold"/>
+
+        </LinearLayout>
+
+        <!-- UPI ID -->
+        <TextView
+            android:id="@+id/withdrawalUpiText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="user@okhdfcbank"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="4dp"/>
+
+        <!-- Date -->
+        <TextView
+            android:id="@+id/withdrawalDateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="25 Feb 2026, 14:30"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:alpha="0.7"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

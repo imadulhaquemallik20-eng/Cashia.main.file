@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/premium_background">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/premium_gradient_header">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="💰 Withdrawal"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"/>
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="@mipmap/ic_launcher_round"/>
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Balance Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="8dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Your Balance"
+                                android:textSize="14sp"
+                                android:textColor="@color/premium_text_secondary"/>
+
+                            <TextView
+                                android:id="@+id/coinBalanceText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💰 0 coins"
+                                android:textSize="28sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/premium_primary"
+                                android:layout_marginTop="4dp"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/premium_coin_stack"
+                            android:contentDescription="Coins"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Withdrawal Form Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Withdraw Funds"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/premium_text_primary"
+                            android:layout_marginBottom="16dp"/>
+
+                        <!-- Amount Field -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Amount (coins)"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"
+                            android:layout_marginBottom="4dp"/>
+
+                        <EditText
+                            android:id="@+id/withdrawalAmountEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:hint="Enter amount"
+                            android:inputType="number"
+                            android:background="@drawable/edit_text_background"
+                            android:padding="16dp"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:id="@+id/minWithdrawalText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Minimum withdrawal: 100 coins"
+                            android:textSize="12sp"
+                            android:textColor="@color/premium_text_tertiary"
+                            android:layout_marginBottom="16dp"/>
+
+                        <!-- UPI ID Field -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="UPI ID"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"
+                            android:layout_marginBottom="4dp"/>
+
+                        <EditText
+                            android:id="@+id/upiIdEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:hint="username@okhdfcbank"
+                            android:inputType="textEmailAddress"
+                            android:background="@drawable/edit_text_background"
+                            android:padding="16dp"
+                            android:layout_marginBottom="8dp"/>
+
+                        <!-- Processing Fee -->
+                        <TextView
+                            android:id="@+id/processingFeeText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Processing fee: 5 coins (5%)"
+                            android:textSize="12sp"
+                            android:textColor="@color/premium_text_tertiary"
+                            android:layout_marginBottom="24dp"/>
+
+                        <!-- Withdraw Button -->
+                        <Button
+                            android:id="@+id/withdrawButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="Withdraw"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:backgroundTint="@color/premium_success"
+                            app:cornerRadius="12dp"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Info Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="2dp"
+                    app:cardCornerRadius="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ℹ️ Withdrawal Information"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/premium_text_primary"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Minimum withdrawal: 100 coins"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"
+                            android:layout_marginBottom="4dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Processing fee: 5 coins (5%)"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"
+                            android:layout_marginBottom="4dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Withdrawals processed within 24-48 hours"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"
+                            android:layout_marginBottom="4dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Make sure your UPI ID is correct"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        android:background="@color/premium_primary_dark"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

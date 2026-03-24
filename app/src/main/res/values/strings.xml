@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">CasHIA</string>
+
+    <!-- Navigation Drawer Titles -->
+    <string name="profile_title">Profile</string>
+    <string name="leaderboard_title">Leaderboard</string>
+    <string name="settings_title">Settings</string>
+    <string name="logout_title">Logout</string>
+
+    <!-- Navigation Drawer Strings -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Other strings your app uses -->
+    <string name="welcome">Welcome</string>
+    <string name="daily_login">Daily Login</string>
+    <string name="claim">Claim</string>
+    <string name="watch_ads">Watch Ads</string>
+    <string name="scratch_cards">Scratch Cards</string>
+    <string name="card_flip">Card Flip</string>
+    <string name="jackpot">Jackpot</string>
+</resources>

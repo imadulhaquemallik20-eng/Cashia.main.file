@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scratch Cards"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#9C27B0"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Stats Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/coinBalanceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💰 Loading..."
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFA000"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
+                    android:id="@+id/cardsRemainingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎴 Cards Today: 0/15"
+                    android:textSize="16sp"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/coinsEarnedTodayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💰 Earned Today: 0/50"
+                    android:textSize="16sp"
+                    android:textColor="#333333"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Scratch Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="16dp"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/cardImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="🎴"
+                android:textSize="100sp"
+                android:backgroundTint="#9C27B0"
+                android:enabled="false"
+                android:clickable="false"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Cooldown Timer -->
+        <TextView
+            android:id="@+id/cooldownTimerText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⏱️ Cooldown: 10:00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#F44336"
+            android:gravity="center"
+            android:padding="12dp"
+            android:visibility="gone"/>
+
+        <!-- Play Button -->
+        <Button
+            android:id="@+id/scratchCardButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Scratch Card (1-5 coins)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="#9C27B0"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Info Text -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• 15 cards per day\n• Earn 1-5 coins per card\n• Max 50 coins per day\n• 10 min cooldown after 5 cards"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:lineSpacingExtra="4dp"
+            android:padding="16dp"
+            android:background="@android:color/white"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back to Main"
+            android:textSize="14sp"
+            android:backgroundTint="#757575"/>
+
+    </LinearLayout>
+
+</ScrollView>

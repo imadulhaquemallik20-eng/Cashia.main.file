@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/achievementCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="16dp"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/achievementIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:text="🏆"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/premium_primary_light"
+            android:layout_marginEnd="16dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/achievementName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Achievement Name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/premium_text_primary"/>
+
+            <TextView
+                android:id="@+id/achievementDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textSize="13sp"
+                android:textColor="@color/premium_text_secondary"
+                android:layout_marginBottom="8dp"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:background="#E0E0E0"
+                android:layout_marginTop="4dp">
+
+                <View
+                    android:id="@+id/achievementProgressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/premium_primary"/>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/achievementProgressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/10"
+                android:textSize="11sp"
+                android:textColor="@color/premium_text_tertiary"
+                android:layout_marginTop="4dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/achievementStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UNLOCKED"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/premium_success"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

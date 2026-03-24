@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Premium Text Style -->
+    <style name="PremiumText" parent="android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Premium Card Style -->
+    <style name="PremiumCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/premium_card_background</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:translationZ">2dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <!-- Premium Game Button Style -->
+    <style name="PremiumGameButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">140dp</item>
+        <item name="android:background">@drawable/premium_game_card</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <!-- Premium Text Styles - Now properly inheriting from PremiumText -->
+    <style name="PremiumText.Title" parent="PremiumText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/premium_text_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="PremiumText.Subtitle" parent="PremiumText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/premium_text_secondary</item>
+    </style>
+
+    <style name="PremiumText.Body" parent="PremiumText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/premium_text_tertiary</item>
+    </style>
+
+    <!-- Premium Number Style -->
+    <style name="PremiumText.Number" parent="PremiumText">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/premium_primary</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
+
+    <!-- Custom AlertDialog Style -->
+    <style name="CustomAlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:background">@color/premium_background</item>
+        <item name="android:textColor">@color/premium_text_primary</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTitleStyle">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="android:buttonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+</resources>

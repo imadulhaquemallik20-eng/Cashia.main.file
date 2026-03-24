@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="primary">#FF6B6B</color>
+    <color name="primary_dark">#FF5252</color>
+    <color name="primary_light">#FF8A8A</color>
+
+    <!-- Secondary Colors -->
+    <color name="secondary">#4ECDC4</color>
+    <color name="secondary_dark">#45B7AA</color>
+    <color name="secondary_light">#6FD9D0</color>
+
+    <!-- Accent Colors -->
+    <color name="accent">#FFE66D</color>
+    <color name="accent_dark">#FFD93D</color>
+
+    <!-- Material Design Purple Shades -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+
+    <!-- Material Design Teal Shades -->
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    <!-- Status Colors -->
+    <color name="success_green">#4CAF50</color>
+    <color name="success">#2ECC71</color>
+    <color name="warning">#F39C12</color>
+    <color name="error">#E74C3C</color>
+    <color name="error_red">#F44336</color>
+    <color name="info">#3498DB</color>
+
+    <!-- Game Colors -->
+    <color name="ad_color">#4158D0</color>
+    <color name="scratch_color">#C850C0</color>
+    <color name="cardflip_color">#FFCC70</color>
+    <color name="jackpot_color">#FF6B6B</color>
+    <color name="leaderboard_color">#4ECDC4</color>
+    <color name="profile_color">#A8E6CF</color>
+
+    <!-- Gradients -->
+    <color name="gradient_start_1">#4158D0</color>
+    <color name="gradient_end_1">#C850C0</color>
+    <color name="gradient_start_2">#FF6B6B</color>
+    <color name="gradient_end_2">#FFE66D</color>
+    <color name="gradient_start_3">#4ECDC4</color>
+    <color name="gradient_end_3">#A8E6CF</color>
+
+    <!-- UI Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary">#2C3E50</color>
+    <color name="text_secondary">#7F8C8D</color>
+    <color name="divider">#ECF0F1</color>
+    <color name="background">#F8F9FA</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Transparency Levels -->
+    <color name="white_10">#1AFFFFFF</color>
+    <color name="white_20">#33FFFFFF</color>
+    <color name="white_30">#4DFFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+    <color name="white_90">#E6FFFFFF</color>
+
+    <color name="black_10">#1A000000</color>
+    <color name="black_20">#33000000</color>
+    <color name="black_30">#4D000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="black_70">#B3000000</color>
+    <color name="black_90">#E6000000</color>
+
+    <!-- Gold/Coin Colors -->
+    <color name="coin_gold">#FFA000</color>
+    <color name="gold_light">#FFC107</color>
+    <color name="gold_dark">#FF8F00</color>
+
+    <!-- Premium Primary Colors -->
+    <color name="premium_primary">#6366F1</color>
+    <color name="premium_primary_dark">#4F46E5</color>
+    <color name="premium_primary_light">#818CF8</color>
+
+    <!-- Premium Secondary Colors -->
+    <color name="premium_secondary">#10B981</color>
+    <color name="premium_secondary_dark">#059669</color>
+    <color name="premium_secondary_light">#34D399</color>
+
+    <!-- Premium Accent Colors -->
+    <color name="premium_accent">#F59E0B</color>
+    <color name="premium_accent_dark">#D97706</color>
+    <color name="premium_accent_light">#FBBF24</color>
+
+    <!-- Premium Gradients -->
+    <color name="premium_gradient_start">#4F46E5</color>
+    <color name="premium_gradient_mid">#7C3AED</color>
+    <color name="premium_gradient_end">#DB2777</color>
+
+    <!-- Premium Surface Colors -->
+    <color name="premium_background">#F9FAFB</color>
+    <color name="premium_card">#FFFFFF</color>
+
+    <!-- Premium Text Colors -->
+    <color name="premium_text_primary">#111827</color>
+    <color name="premium_text_secondary">#6B7280</color>
+    <color name="premium_text_tertiary">#9CA3AF</color>
+
+    <!-- Premium Status Colors -->
+    <color name="premium_success">#10B981</color>
+    <color name="premium_warning">#F59E0B</color>
+    <color name="premium_error">#EF4444</color>
+
+    <!-- Game Category Colors -->
+    <color name="premium_ad">#3B82F6</color>
+    <color name="premium_ad_light">#93C5FD</color>
+    <color name="premium_scratch">#8B5CF6</color>
+    <color name="premium_cardflip">#EC4899</color>
+    <color name="premium_jackpot">#EF4444</color>
+    <color name="premium_leaderboard">#10B981</color>
+    <color name="premium_profile">#F59E0B</color>
+    <color name="premium_info">#3B82F6</color>
+
+    <!-- Medal Colors -->
+    <color name="gold">#FFD700</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="bronze">#CD7F32</color>
+
+    <color name="premium_success_light">#E8F5E9</color>
+
+</resources>
