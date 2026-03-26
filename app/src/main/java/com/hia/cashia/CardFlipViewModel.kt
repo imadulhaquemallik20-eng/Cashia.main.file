@@ -40,8 +40,8 @@ class CardFlipViewModel : ViewModel() {
     ).shuffled()
 
     // LiveData for game state
-    private val _gameState = MutableLiveData<CardFlipGameState>()
-    val gameState: LiveData<CardFlipGameState> = _gameState
+    private val _gameState = MutableLiveData<CardFlipGameState?>()
+    val gameState: LiveData<CardFlipGameState> = _gameState as LiveData<CardFlipGameState>
 
     // LiveData for user data
     private val _userData = MutableLiveData<User?>()

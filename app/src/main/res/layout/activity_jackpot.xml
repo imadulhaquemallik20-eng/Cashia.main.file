@@ -50,7 +50,7 @@
                     android:id="@+id/statsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📊 Loading stats..."
+                    android:text=" Loading stats..."
                     android:textSize="14sp"
                     android:textColor="#333333"
                     android:lineSpacingExtra="4dp"/>
@@ -317,7 +317,7 @@
             android:id="@+id/backButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🔙 Back to Main"
+            android:text=" Back to Main"
             android:textSize="14sp"
             android:backgroundTint="#757575"/>
 

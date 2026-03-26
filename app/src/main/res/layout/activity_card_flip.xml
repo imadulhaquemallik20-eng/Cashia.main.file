@@ -50,7 +50,7 @@
                     android:id="@+id/statsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📊 Loading stats..."
+                    android:text=" Loading stats..."
                     android:textSize="14sp"
                     android:textColor="#333333"
                     android:lineSpacingExtra="4dp"/>
@@ -64,7 +64,7 @@
             android:id="@+id/cooldownTimerText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="⏱️ Cooldown: 5:00"
+            android:text="⏱ Cooldown: 5:00"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#F44336"
@@ -115,7 +115,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🎮 How to Play:"
+                    android:text=" How to Play:"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="#333333"
@@ -146,7 +146,7 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
-                android:text="🔄 New Game"
+                android:text=" New Game"
                 android:textSize="14sp"
                 android:backgroundTint="#4CAF50"
                 android:layout_marginEnd="8dp"/>
@@ -156,7 +156,7 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
-                android:text="🔙 Back"
+                android:text=" Back"
                 android:textSize="14sp"
                 android:backgroundTint="#757575"/>
 

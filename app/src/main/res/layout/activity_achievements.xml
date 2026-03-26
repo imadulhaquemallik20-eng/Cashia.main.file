@@ -27,18 +27,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="🏆 Achievements"
+                    android:text=" Achievements"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"/>
 
                 <ImageView
+                    android:id="@+id/logoImageView"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="16dp"
-                    android:src="@mipmap/ic_launcher_round"/>
+                    android:src="@drawable/ic_custom_logo"
+                    android:contentDescription="App Logo"/>
 
             </RelativeLayout>
 
@@ -63,7 +65,7 @@
                     android:id="@+id/statsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🏆 0/10 Achievements Unlocked"
+                    android:text=" 0/10 Achievements Unlocked"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"/>

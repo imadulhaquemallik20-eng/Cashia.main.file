@@ -33,12 +33,14 @@
                     android:textColor="@android:color/white"/>
 
                 <ImageView
+                    android:id="@+id/logoImageView"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="16dp"
-                    android:src="@mipmap/ic_launcher_round"/>
+                    android:src="@drawable/ic_custom_logo"
+                    android:contentDescription="App Logo"/>
 
             </RelativeLayout>
 
