@@ -17,32 +17,40 @@ class ScratchCardViewModel : ViewModel() {
     private val userManager = UserManager()
     private val usersCollection = FirebaseFirestore.getInstance().collection("users")
 
-    // LiveData for user data
+    // Constants
+    companion object {
+        const val MAX_CARDS_PER_DAY = 15
+        const val MAX_COINS_PER_DAY = 50
+        const val MIN_COINS_PER_CARD = 1
+        const val MAX_COINS_PER_CARD = 5
+        const val CARDS_BEFORE_COOLDOWN = 5
+        const val COOLDOWN_MINUTES = 10L
+        const val COOLDOWN_MILLIS = COOLDOWN_MINUTES * 60 * 1000
+    }
+
+    // LiveData
     private val _userData = MutableLiveData<User?>()
     val userData: LiveData<User?> = _userData
 
-    // LiveData for game state
     private val _gameState = MutableLiveData<ScratchCardGameState?>()
     val gameState: LiveData<ScratchCardGameState?> = _gameState
 
-    // Loading state
+    private val _playResult = MutableLiveData<ScratchCardPlayResult?>()
+    val playResult: LiveData<ScratchCardPlayResult?> = _playResult
+
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // Error messages
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
     fun loadUserData() {
         val userId = userManager.getCurrentUserId() ?: return
 
-        _isLoading.value = true
-
         viewModelScope.launch(Dispatchers.IO) {
             val result = userManager.getUserData(userId)
 
             withContext(Dispatchers.Main) {
-                _isLoading.value = false
                 if (result.isSuccess) {
                     val user = result.getOrNull()
                     _userData.value = user
@@ -54,7 +62,7 @@ class ScratchCardViewModel : ViewModel() {
         }
     }
 
-    fun playScratchCard(userId: String) {
+    fun playScratchCard(userId: String, rewardAmount: Int) {
         _isLoading.value = true
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -82,12 +90,16 @@ class ScratchCardViewModel : ViewModel() {
                     val resetCardsSinceCooldown = if (lastPlayDate == today) cardsSinceCooldown else 0
 
                     // Check daily limits
-                    if (resetCardsPlayed >= ScratchCardActivity.MAX_SCRATCH_CARDS_PER_DAY) {
-                        return@runTransaction ScratchCardPlayResult(false, 0, "Daily card limit reached (${ScratchCardActivity.MAX_SCRATCH_CARDS_PER_DAY})", false, 0L)
+                    if (resetCardsPlayed >= MAX_CARDS_PER_DAY) {
+                        return@runTransaction ScratchCardPlayResult(
+                            false, 0, "Daily card limit reached (${MAX_CARDS_PER_DAY})", false, 0L
+                        )
                     }
 
-                    if (resetCoinsEarned >= ScratchCardActivity.MAX_COINS_PER_DAY_FROM_SCRATCH) {
-                        return@runTransaction ScratchCardPlayResult(false, 0, "Daily earning limit reached (${ScratchCardActivity.MAX_COINS_PER_DAY_FROM_SCRATCH} coins)", false, 0L)
+                    if (resetCoinsEarned + rewardAmount > MAX_COINS_PER_DAY) {
+                        return@runTransaction ScratchCardPlayResult(
+                            false, 0, "This would exceed daily earning limit", false, 0L
+                        )
                     }
 
                     // Check cooldown
@@ -95,36 +107,24 @@ class ScratchCardViewModel : ViewModel() {
                         val remainingMinutes = ((cooldownUntil - currentTime) / 1000) / 60
                         val remainingSeconds = ((cooldownUntil - currentTime) / 1000) % 60
                         return@runTransaction ScratchCardPlayResult(
-                            false,
-                            0,
-                            "On cooldown! Wait ${remainingMinutes}m ${remainingSeconds}s",
-                            true,
-                            cooldownUntil
+                            false, 0, "On cooldown! Wait ${remainingMinutes}m ${remainingSeconds}s", true, cooldownUntil
                         )
-                    }
-
-                    // Calculate reward
-                    val coinsEarned = (ScratchCardActivity.MIN_COINS_PER_CARD..ScratchCardActivity.MAX_COINS_PER_CARD).random()
-
-                    // Check if this would exceed daily earning limit
-                    if (resetCoinsEarned + coinsEarned > ScratchCardActivity.MAX_COINS_PER_DAY_FROM_SCRATCH) {
-                        return@runTransaction ScratchCardPlayResult(false, 0, "This would exceed daily earning limit", false, 0L)
                     }
 
                     // Update counters
                     val newCardsPlayed = resetCardsPlayed + 1
-                    val newCoinsEarned = resetCoinsEarned + coinsEarned
+                    val newCoinsEarned = resetCoinsEarned + rewardAmount
                     val newCardsSinceCooldown = resetCardsSinceCooldown + 1
 
                     // Check if we need to set cooldown
                     var newCooldownUntil = 0L
-                    if (newCardsSinceCooldown >= ScratchCardActivity.CARDS_BEFORE_COOLDOWN) {
-                        newCooldownUntil = currentTime + ScratchCardActivity.COOLDOWN_MILLIS
+                    if (newCardsSinceCooldown >= CARDS_BEFORE_COOLDOWN) {
+                        newCooldownUntil = currentTime + COOLDOWN_MILLIS
                     }
 
                     // Update user document
-                    transaction.update(userDoc, "coinBalance", currentBalance + coinsEarned)
-                    transaction.update(userDoc, "totalCoinsEarned", currentTotalEarned + coinsEarned)
+                    transaction.update(userDoc, "coinBalance", currentBalance + rewardAmount)
+                    transaction.update(userDoc, "totalCoinsEarned", currentTotalEarned + rewardAmount)
                     transaction.update(userDoc, "scratchCardsPlayedToday", newCardsPlayed)
                     transaction.update(userDoc, "scratchCoinsEarnedToday", newCoinsEarned)
                     transaction.update(userDoc, "lastScratchCardDate", today)
@@ -133,7 +133,9 @@ class ScratchCardViewModel : ViewModel() {
                     transaction.update(userDoc, "scratchCardCooldownUntil", newCooldownUntil)
 
                     // Return success result
-                    ScratchCardPlayResult(true, coinsEarned, "Success", newCooldownUntil > 0, newCooldownUntil)
+                    ScratchCardPlayResult(
+                        true, rewardAmount, "Success", newCooldownUntil > 0, newCooldownUntil
+                    )
 
                 }.await()
 
@@ -142,19 +144,27 @@ class ScratchCardViewModel : ViewModel() {
 
                     // Update game state
                     _gameState.value = ScratchCardGameState(
-                        lastPlayResult = result,
                         isOnCooldown = result.cooldownStarted,
                         cooldownEndTime = result.cooldownEndTime
                     )
 
+                    // Set play result
+                    _playResult.value = result
+
                     // Refresh user data
                     loadUserData()
+
+                    // Update leaderboard
+                    if (result.success && result.coinsEarned > 0) {
+                        userManager.updateUserActivity(userId, result.coinsEarned)
+                    }
                 }
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     _isLoading.value = false
                     _errorMessage.value = "Failed to play: ${e.message}"
+                    _playResult.value = ScratchCardPlayResult(false, 0, e.message ?: "Unknown error", false, 0L)
                 }
             }
         }
@@ -166,7 +176,6 @@ class ScratchCardViewModel : ViewModel() {
             val isOnCooldown = currentTime < user.scratchCardCooldownUntil
 
             _gameState.value = ScratchCardGameState(
-                lastPlayResult = null,
                 isOnCooldown = isOnCooldown,
                 cooldownEndTime = user.scratchCardCooldownUntil
             )
@@ -177,8 +186,8 @@ class ScratchCardViewModel : ViewModel() {
         _errorMessage.value = null
     }
 
-    fun clearGameState() {
-        _gameState.value = null
+    fun clearPlayResult() {
+        _playResult.value = null
     }
 
     private fun getTodayDate(): String {

@@ -383,4 +383,28 @@ class CardFlipViewModel : ViewModel() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return dateFormat.format(Date())
     }
+
+    fun clearLastResult() {
+        val currentState = _gameState.value
+        if (currentState != null) {
+            _gameState.value = currentState.copy(lastPlayResult = null)
+        }
+    }
+
+    fun checkCooldownStatus() {
+        val userId = userManager.getCurrentUserId() ?: return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val user = userManager.getUserData(userId).getOrNull()
+            user?.let {
+                val currentTime = System.currentTimeMillis()
+                val isOnCooldown = currentTime < it.cardFlipCooldownUntil
+
+                _gameState.value = _gameState.value?.copy(
+                    isOnCooldown = isOnCooldown,
+                    cooldownEndTime = it.cardFlipCooldownUntil
+                )
+            }
+        }
+    }
 }

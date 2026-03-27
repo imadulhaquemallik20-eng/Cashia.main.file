@@ -79,7 +79,7 @@ class AchievementsActivity : AppCompatActivity(), NavigationView.OnNavigationIte
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        findViewById<TextView>(R.id.toolbarTitle).text = "🏆 Achievements"
+        findViewById<TextView>(R.id.toolbarTitle).text = "Achievements"
     }
 
     private fun setupDrawer() {
@@ -245,7 +245,7 @@ class AchievementsActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
 
             R.id.nav_achievements -> {
-                startActivity(Intent(this, AchievementsActivity::class.java))
+
             }
 
             R.id.nav_withdrawal -> {
@@ -257,9 +257,7 @@ class AchievementsActivity : AppCompatActivity(), NavigationView.OnNavigationIte
             }
 
             R.id.nav_logout -> {
-                auth.signOut()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+                showLogoutConfirmationDialog()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -348,6 +346,27 @@ class AchievementsActivity : AppCompatActivity(), NavigationView.OnNavigationIte
         }
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
         builder.show()
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        AlertDialog.Builder(this, R.style.CustomAlertDialog)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout? You'll need to login again to access your account.")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton("Logout") { _, _ ->
+                performLogout()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun performLogout() {
+        auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {

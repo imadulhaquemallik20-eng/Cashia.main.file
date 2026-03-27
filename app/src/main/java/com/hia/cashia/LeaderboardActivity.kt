@@ -112,7 +112,7 @@ class LeaderboardActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
-        toolbarTitle.text = "🏆 Leaderboard"
+        toolbarTitle.text = "Leaderboard"
     }
 
     private fun setupDrawer() {
@@ -241,7 +241,7 @@ class LeaderboardActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 startActivity(Intent(this, ProfileActivity::class.java))
             }
             R.id.nav_leaderboard -> {
-                startActivity(Intent(this, LeaderboardActivity::class.java))
+
             }
             R.id.nav_achievements -> {
                 startActivity(Intent(this, AchievementsActivity::class.java))
@@ -253,9 +253,7 @@ class LeaderboardActivity : AppCompatActivity(), NavigationView.OnNavigationItem
                 showSettingsDialog()
             }
             R.id.nav_logout -> {
-                auth.signOut()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+                showLogoutConfirmationDialog()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -334,6 +332,27 @@ class LeaderboardActivity : AppCompatActivity(), NavigationView.OnNavigationItem
         }
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
         builder.show()
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        AlertDialog.Builder(this, R.style.CustomAlertDialog)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout? You'll need to login again to access your account.")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton("Logout") { _, _ ->
+                performLogout()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun performLogout() {
+        auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {

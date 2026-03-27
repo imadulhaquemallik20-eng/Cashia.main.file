@@ -27,7 +27,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text=" Achievements"
+                    android:text="Achievements"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"/>
@@ -39,7 +39,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_custom_logo"
+                    android:src="@mipmap/ic_launcher_round"
                     android:contentDescription="App Logo"/>
 
             </RelativeLayout>

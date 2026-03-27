@@ -127,5 +127,6 @@
     <color name="bronze">#CD7F32</color>
 
     <color name="premium_success_light">#E8F5E9</color>
+    <color name="premium_warning_light">#FFE0B2</color>
 
 </resources>

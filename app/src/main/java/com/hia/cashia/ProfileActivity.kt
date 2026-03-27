@@ -172,12 +172,11 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
-                // Navigate to MainActivity
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
             R.id.nav_profile -> {
-                startActivity(Intent(this, ProfileActivity::class.java))
+
             }
             R.id.nav_leaderboard -> {
                 startActivity(Intent(this, LeaderboardActivity::class.java))
@@ -192,9 +191,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 showSettingsDialog()
             }
             R.id.nav_logout -> {
-                auth.signOut()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+                showLogoutConfirmationDialog()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -245,6 +242,27 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         builder.setView(view)
         builder.setPositiveButton("Done") { dialog, _ -> dialog.dismiss() }
         builder.show()
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        AlertDialog.Builder(this, R.style.CustomAlertDialog)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout? You'll need to login again to access your account.")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton("Logout") { _, _ ->
+                performLogout()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun performLogout() {
+        auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {

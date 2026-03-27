@@ -32,12 +32,20 @@ class WithdrawalActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var toolbar: Toolbar
     private lateinit var toggle: ActionBarDrawerToggle
 
+    // ============================================
+    // TEMPORARY WITHDRAWAL BLOCK - REMOVE WHEN READY
+    // ============================================
+    private val isWithdrawalEnabled = false // Set to true to enable withdrawal
+    // ============================================
+
     private lateinit var coinBalanceText: TextView
     private lateinit var withdrawalAmountEditText: EditText
     private lateinit var upiIdEditText: EditText
     private lateinit var withdrawButton: Button
     private lateinit var minWithdrawalText: TextView
     private lateinit var processingFeeText: TextView
+    private lateinit var blockMessageCard: MaterialCardView
+    private lateinit var blockMessageText: TextView
 
     private var currentUserId: String? = null
     private var currentBalance: Int = 0
@@ -62,7 +70,16 @@ class WithdrawalActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         setupToolbar()
         setupDrawer()
         setupClickListeners()
-        loadUserData()
+
+        if (isWithdrawalEnabled) {
+            // Show withdrawal form
+            showWithdrawalForm()
+            loadUserData()
+        } else {
+            // Show temporary block message
+            showTemporaryBlockMessage()
+        }
+
         loadUserProfileForNav()
     }
 
@@ -77,15 +94,14 @@ class WithdrawalActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         withdrawButton = findViewById(R.id.withdrawButton)
         minWithdrawalText = findViewById(R.id.minWithdrawalText)
         processingFeeText = findViewById(R.id.processingFeeText)
-
-        minWithdrawalText.text = "Minimum withdrawal: $MIN_WITHDRAWAL coins"
-        processingFeeText.text = "Processing fee: $PROCESSING_FEE coins (5%)"
+        blockMessageCard = findViewById(R.id.blockMessageCard)
+        blockMessageText = findViewById(R.id.blockMessageText)
     }
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        findViewById<TextView>(R.id.toolbarTitle).text = "💰 Withdrawal"
+        findViewById<TextView>(R.id.toolbarTitle).text = "Withdrawal"
     }
 
     private fun setupDrawer() {
@@ -112,6 +128,26 @@ class WithdrawalActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 }
             }
         }
+    }
+
+    private fun showWithdrawalForm() {
+        // Hide block message, show withdrawal form
+        blockMessageCard.visibility = View.GONE
+        withdrawalAmountEditText.visibility = View.VISIBLE
+        upiIdEditText.visibility = View.VISIBLE
+        withdrawButton.visibility = View.VISIBLE
+        minWithdrawalText.visibility = View.VISIBLE
+        processingFeeText.visibility = View.VISIBLE
+    }
+
+    private fun showTemporaryBlockMessage() {
+        // Hide withdrawal form, show block message
+        withdrawalAmountEditText.visibility = View.GONE
+        upiIdEditText.visibility = View.GONE
+        withdrawButton.visibility = View.GONE
+        minWithdrawalText.visibility = View.GONE
+        processingFeeText.visibility = View.GONE
+        blockMessageCard.visibility = View.VISIBLE
     }
 
     private fun loadUserData() {
@@ -161,7 +197,6 @@ class WithdrawalActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             return
         }
 
-        // Show confirmation dialog
         val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
         builder.setTitle("Confirm Withdrawal")
         builder.setMessage("""
@@ -191,7 +226,6 @@ class WithdrawalActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                     .update("coinBalance", newBalance)
                     .await()
 
-                // Add transaction record
                 val transaction = mapOf(
                     "type" to "withdrawal",
                     "amount" to -amount,
@@ -240,15 +274,13 @@ class WithdrawalActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 startActivity(Intent(this, AchievementsActivity::class.java))
             }
             R.id.nav_withdrawal -> {
-                // Already here
+
             }
             R.id.nav_settings -> {
                 showSettingsDialog()
             }
             R.id.nav_logout -> {
-                auth.signOut()
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+                showLogoutConfirmationDialog()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -332,6 +364,27 @@ class WithdrawalActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
         builder.show()
+    }
+
+    private fun showLogoutConfirmationDialog() {
+        AlertDialog.Builder(this, R.style.CustomAlertDialog)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout? You'll need to login again to access your account.")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton("Logout") { _, _ ->
+                performLogout()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun performLogout() {
+        auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {

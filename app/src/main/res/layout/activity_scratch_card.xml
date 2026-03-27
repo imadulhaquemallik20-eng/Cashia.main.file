@@ -1,137 +1,388 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:background="@color/premium_background">
 
-        <!-- Title -->
-        <TextView
+        <!-- Premium Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Scratch Cards"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="#9C27B0"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/premium_gradient_header">
 
-        <!-- Stats Card -->
-        <androidx.cardview.widget.CardView
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Scratch Cards"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"/>
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="@mipmap/ic_launcher_round"/>
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="4dp"
-            app:cardCornerRadius="12dp"
-            android:layout_marginBottom="16dp">
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:gravity="center_horizontal">
 
-                <TextView
-                    android:id="@+id/coinBalanceText"
-                    android:layout_width="wrap_content"
+                <!-- Balance Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="💰 Loading..."
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="#FFA000"
-                    android:layout_marginBottom="16dp"/>
+                    app:cardElevation="8dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/white">
 
-                <TextView
-                    android:id="@+id/cardsRemainingText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🎴 Cards Today: 0/15"
-                    android:textSize="16sp"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="8dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/coinsEarnedTodayText"
-                    android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Your Balance"
+                                android:textSize="14sp"
+                                android:textColor="@color/premium_text_secondary"/>
+
+                            <TextView
+                                android:id="@+id/coinBalanceText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💰 0 coins"
+                                android:textSize="28sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/premium_primary"
+                                android:layout_marginTop="4dp"/>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/premium_coin_stack"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Scratch Card Container -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="💰 Earned Today: 0/50"
-                    android:textSize="16sp"
-                    android:textColor="#333333"/>
+                    app:cardElevation="12dp"
+                    app:cardCornerRadius="24dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp">
+
+                        <!-- Scratch Card View (Custom View for scratching) -->
+                        <com.hia.cashia.ScratchCardView
+                            android:id="@+id/scratchCardView"
+                            android:layout_width="match_parent"
+                            android:layout_height="280dp"
+                            android:background="@drawable/scratch_card_background"
+                            android:padding="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            tools:ignore="MissingClass" />
+
+                    </FrameLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Stats Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="16dp"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="📊 Today's Stats"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/premium_text_primary"
+                            android:layout_marginBottom="12dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            android:layout_marginBottom="8dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Cards Played:"
+                                android:textSize="14sp"
+                                android:textColor="@color/premium_text_secondary"/>
+
+                            <TextView
+                                android:id="@+id/cardsRemainingText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="0/15"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/premium_primary"
+                                android:gravity="end"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            android:layout_marginBottom="8dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Coins Earned Today:"
+                                android:textSize="14sp"
+                                android:textColor="@color/premium_text_secondary"/>
+
+                            <TextView
+                                android:id="@+id/coinsEarnedTodayText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="0/50"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/premium_success"
+                                android:gravity="end"/>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/premium_text_tertiary"
+                            android:alpha="0.3"
+                            android:layout_marginVertical="8dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Reward Range:"
+                                android:textSize="14sp"
+                                android:textColor="@color/premium_text_secondary"/>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="1-5 coins"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/premium_warning"
+                                android:gravity="end"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Cooldown Timer (Hidden by default) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cooldownCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/premium_warning">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:text="⏱️"
+                            android:textSize="24sp"
+                            android:gravity="center"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Cooldown Active"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"/>
+
+                            <TextView
+                                android:id="@+id/cooldownTimerText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10:00"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Info Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="2dp"
+                    app:cardCornerRadius="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@android:color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ℹ️ How to Play"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/premium_text_primary"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Scratch the card to reveal your reward"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"
+                            android:layout_marginBottom="4dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• Each card gives 1-5 coins"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"
+                            android:layout_marginBottom="4dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• 15 cards per day maximum"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"
+                            android:layout_marginBottom="4dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="• 10 min cooldown after 5 cards"
+                            android:textSize="14sp"
+                            android:textColor="@color/premium_text_secondary"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- Scratch Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:cardElevation="8dp"
-            app:cardCornerRadius="16dp"
-            android:layout_marginBottom="16dp">
-
-            <Button
-                android:id="@+id/cardImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="🎴"
-                android:textSize="100sp"
-                android:backgroundTint="#9C27B0"
-                android:enabled="false"
-                android:clickable="false"/>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Cooldown Timer -->
-        <TextView
-            android:id="@+id/cooldownTimerText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="⏱️ Cooldown: 10:00"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#F44336"
-            android:gravity="center"
-            android:padding="12dp"
-            android:visibility="gone"/>
-
-        <!-- Play Button -->
-        <Button
-            android:id="@+id/scratchCardButton"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Scratch Card (1-5 coins)"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:backgroundTint="#9C27B0"
-            android:layout_marginBottom="12dp"/>
-
-        <!-- Info Text -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="• 15 cards per day\n• Earn 1-5 coins per card\n• Max 50 coins per day\n• 10 min cooldown after 5 cards"
-            android:textSize="14sp"
-            android:textColor="#666666"
-            android:lineSpacingExtra="4dp"
-            android:padding="16dp"
-            android:background="@android:color/white"
-            android:layout_marginBottom="12dp"/>
-
-        <!-- Back Button -->
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back to Main"
-            android:textSize="14sp"
-            android:backgroundTint="#757575"/>
+        </ScrollView>
 
     </LinearLayout>
 
-</ScrollView>
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        android:background="@color/premium_primary_dark"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

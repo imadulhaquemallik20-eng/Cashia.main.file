@@ -27,7 +27,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="💰 Withdrawal"
+                    android:text="Withdrawal"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"/>
@@ -39,7 +39,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_custom_logo"
+                    android:src="@mipmap/ic_launcher_round"
                     android:contentDescription="App Logo"/>
 
             </RelativeLayout>
@@ -102,6 +102,59 @@
                             android:layout_height="60dp"
                             android:src="@drawable/premium_coin_stack"
                             android:contentDescription="Coins"/>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Temporary Block Message Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/blockMessageCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="8dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/premium_warning">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="24dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:text="⏳"
+                            android:textSize="48sp"
+                            android:gravity="center"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="#33FFFFFF"
+                            android:layout_marginBottom="16dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Withdrawal Temporarily Unavailable"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/white"
+                            android:gravity="center"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:id="@+id/blockMessageText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="We're currently updating our withdrawal system. This feature will be available soon. Thank you for your patience!"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/white"
+                            android:gravity="center"
+                            android:alpha="0.9"
+                            android:layout_marginTop="8dp"/>
 
                     </LinearLayout>
 
@@ -183,7 +236,7 @@
                             android:id="@+id/processingFeeText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Processing fee: 5 coins (5%)"
+                            android:text="Processing fee: 5 coins"
                             android:textSize="12sp"
                             android:textColor="@color/premium_text_tertiary"
                             android:layout_marginBottom="24dp"/>
@@ -221,7 +274,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="ℹ️ Withdrawal Information"
+                            android:text="ℹ Withdrawal Information"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/premium_text_primary"
@@ -238,7 +291,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="• Processing fee: 5 coins (5%)"
+                            android:text="• Processing fee: 5 coins"
                             android:textSize="14sp"
                             android:textColor="@color/premium_text_secondary"
                             android:layout_marginBottom="4dp"/>
@@ -254,7 +307,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="• Make sure your UPI ID is correct"
+                            android:text="• Make sure your UPI ID is correct. We are not responsible if your UPI ID is incorrect. Please throughly check it before you proceed"
                             android:textSize="14sp"
                             android:textColor="@color/premium_text_secondary"/>
 
