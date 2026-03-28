@@ -3,25 +3,26 @@ package com.hia.cashia
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var userManager: UserManager
 
-    private lateinit var usernameEditText: EditText  // New field
+    private lateinit var usernameEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var registerButton: Button
     private lateinit var goToLoginButton: Button
+    private lateinit var privacyPolicyCheckbox: CheckBox
+    private lateinit var privacyPolicyLink: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,22 +40,14 @@ class RegisterActivity : AppCompatActivity() {
         setupClickListeners()
     }
 
-    override fun onResume() {
-        super.onResume()
-        IronSourceManager.onResume(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        IronSourceManager.onPause(this)
-    }
-
     private fun initViews() {
-        usernameEditText = findViewById(R.id.usernameEditText)  // New
+        usernameEditText = findViewById(R.id.usernameEditText)
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         registerButton = findViewById(R.id.registerButton)
         goToLoginButton = findViewById(R.id.goToLoginButton)
+        privacyPolicyCheckbox = findViewById(R.id.privacyPolicyCheckbox)
+        privacyPolicyLink = findViewById(R.id.privacyPolicyLink)
     }
 
     private fun setupClickListeners() {
@@ -64,6 +57,10 @@ class RegisterActivity : AppCompatActivity() {
 
         goToLoginButton.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
+        }
+
+        privacyPolicyLink.setOnClickListener {
+            startActivity(Intent(this, PrivacyPolicyActivity::class.java))
         }
     }
 
@@ -84,6 +81,12 @@ class RegisterActivity : AppCompatActivity() {
 
         if (password.length < 6) {
             Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Check privacy policy agreement
+        if (!privacyPolicyCheckbox.isChecked) {
+            Toast.makeText(this, "Please agree to the Privacy Policy", Toast.LENGTH_SHORT).show()
             return
         }
 

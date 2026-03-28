@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/premium_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,30 +13,20 @@
         android:gravity="center_horizontal">
 
         <!-- Logo -->
-
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="App Logo"
-            android:src="@mipmap/ic_launcher_round" />
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CasHIA"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:textColor="@color/primary"
-            android:layout_marginBottom="32dp"/>
-
-        <!-- Username Field - Simple EditText (No TextInputLayout for now) -->
+        <!-- Username Field -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Username"
             android:textSize="14sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/premium_text_primary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -44,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:textColor="@color/premium_text_primary"
             android:background="@drawable/edit_text_background"
             android:inputType="textPersonName"
             android:maxLines="1"
@@ -55,7 +46,7 @@
             android:layout_height="wrap_content"
             android:text="Email"
             android:textSize="14sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/premium_text_primary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -63,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:textColor="@color/premium_text_primary"
             android:background="@drawable/edit_text_background"
             android:inputType="textEmailAddress"
             android:maxLines="1"
@@ -74,7 +66,7 @@
             android:layout_height="wrap_content"
             android:text="Password"
             android:textSize="14sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/premium_text_primary"
             android:layout_marginBottom="4dp"/>
 
         <EditText
@@ -82,11 +74,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:textColor="@color/premium_text_primary"
             android:background="@drawable/edit_text_background"
             android:inputType="textPassword"
             android:maxLines="1"
             android:layout_marginBottom="24dp"/>
 
+        <!-- Register Button -->
         <Button
             android:id="@+id/registerButton"
             android:layout_width="match_parent"
@@ -94,18 +88,66 @@
             android:text="Register"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/premium_primary"
             app:cornerRadius="12dp"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Privacy Policy Agreement -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <CheckBox
+                android:id="@+id/privacyPolicyCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/premium_primary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I agree to the "
+                android:textSize="12sp"
+                android:textColor="@color/premium_text_secondary"/>
+
+            <TextView
+                android:id="@+id/privacyPolicyLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy Policy"
+                android:textSize="12sp"
+                android:textColor="@color/premium_primary"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"/>
+
+        </LinearLayout>
+
+        <!-- Login Link -->
         <Button
             android:id="@+id/goToLoginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Already have an account? Login"
             android:textSize="14sp"
-            android:backgroundTint="@color/secondary"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/premium_secondary"
             app:cornerRadius="12dp"/>
+
+        <!-- App Version -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CasHIA v0.0.4"
+            android:textSize="12sp"
+            android:textColor="@color/premium_text_tertiary"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"/>
 
     </LinearLayout>
 

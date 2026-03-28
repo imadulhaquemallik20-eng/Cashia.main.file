@@ -1,7 +1,10 @@
 package com.hia.cashia
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
@@ -19,7 +22,12 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import kotlin.math.min
 
 class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,21 +41,25 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var toolbar: Toolbar
     private lateinit var toggle: ActionBarDrawerToggle
 
-    private lateinit var avatarText: TextView
+    // UI Elements
+    private lateinit var avatarImageView: ImageView  // Changed from TextView to ImageView
     private lateinit var usernameText: TextView
     private lateinit var emailText: TextView
     private lateinit var joinDateText: TextView
 
+    // Statistics
     private lateinit var totalCoinsValue: TextView
     private lateinit var currentBalanceValue: TextView
     private lateinit var loginStreakValue: TextView
     private lateinit var gamesPlayedValue: TextView
 
+    // Game Stats
     private lateinit var adsWatchedValue: TextView
     private lateinit var scratchCardsValue: TextView
     private lateinit var cardFlipValue: TextView
     private lateinit var jackpotSpinsValue: TextView
 
+    // Today's Stats
     private lateinit var todayEarningsValue: TextView
     private lateinit var todayGamesValue: TextView
     private lateinit var weeklyEarningsValue: TextView
@@ -72,19 +84,10 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         initViews()
         setupToolbar()
         setupDrawer()
+        setupClickListeners()
         observeViewModel()
         viewModel.loadUserData()
         loadUserProfileForNav()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        IronSourceManager.onResume(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        IronSourceManager.onPause(this)
     }
 
     private fun initViews() {
@@ -92,7 +95,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         navView = findViewById(R.id.nav_view)
         toolbar = findViewById(R.id.toolbar)
 
-        avatarText = findViewById(R.id.avatarText)
+        avatarImageView = findViewById(R.id.avatarImageView)  // This must exist in XML
         usernameText = findViewById(R.id.usernameText)
         emailText = findViewById(R.id.emailText)
         joinDateText = findViewById(R.id.joinDateText)
@@ -129,6 +132,10 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         navView.setNavigationItemSelectedListener(this)
     }
 
+    private fun setupClickListeners() {
+        // Add any click listeners if needed
+    }
+
     private fun loadUserProfileForNav() {
         CoroutineScope(Dispatchers.IO).launch {
             val result = userManager.getUserData(currentUserId!!)
@@ -136,18 +143,89 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 if (result.isSuccess) {
                     val user = result.getOrNull()
                     val headerView = navView.getHeaderView(0)
-                    headerView.findViewById<TextView>(R.id.navAvatar).text = user?.avatar ?: "👤"
-                    headerView.findViewById<TextView>(R.id.navUsername).text = user?.username ?: "User"
-                    headerView.findViewById<TextView>(R.id.navEmail).text = user?.email ?: ""
+                    val navAvatarEmoji = headerView.findViewById<TextView>(R.id.navAvatarEmoji)
+                    val navAvatarImage = headerView.findViewById<ImageView>(R.id.navAvatarImage)
+                    val navUsername = headerView.findViewById<TextView>(R.id.navUsername)
+                    val navEmail = headerView.findViewById<TextView>(R.id.navEmail)
+
+                    user?.let {
+                        navUsername.text = it.username
+                        navEmail.text = it.email
+
+                        // Handle avatar display - round shape
+                        if (it.avatarBase64.isNotEmpty()) {
+                            // Show custom image avatar
+                            navAvatarEmoji.visibility = View.GONE
+                            navAvatarImage.visibility = View.VISIBLE
+                            try {
+                                val imageBytes = android.util.Base64.decode(it.avatarBase64, android.util.Base64.DEFAULT)
+                                val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
+                                // Create circular bitmap for better quality
+                                val circularBitmap = getCircularBitmap(bitmap)
+                                navAvatarImage.setImageBitmap(circularBitmap)
+                                navAvatarImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                            } catch (e: Exception) {
+                                // Fallback to emoji
+                                navAvatarEmoji.visibility = View.VISIBLE
+                                navAvatarImage.visibility = View.GONE
+                                navAvatarEmoji.text = it.avatar
+                            }
+                        } else {
+                            // Show emoji avatar
+                            navAvatarEmoji.visibility = View.VISIBLE
+                            navAvatarImage.visibility = View.GONE
+                            navAvatarEmoji.text = it.avatar
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    // Helper function to create circular bitmap
+    private fun getCircularBitmap(bitmap: Bitmap): Bitmap {
+        val size = min(bitmap.width, bitmap.height)
+        val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(output)
+        val paint = android.graphics.Paint()
+        val rect = android.graphics.Rect(0, 0, size, size)
+
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+        paint.xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN)
+
+        val srcRect = android.graphics.Rect(
+            (bitmap.width - size) / 2,
+            (bitmap.height - size) / 2,
+            (bitmap.width + size) / 2,
+            (bitmap.height + size) / 2
+        )
+        canvas.drawBitmap(bitmap, srcRect, rect, paint)
+
+        return output
+    }
+
+    private fun loadAvatar(user: User) {
+        if (user.avatarBase64.isNotEmpty()) {
+            try {
+                val imageBytes = Base64.decode(user.avatarBase64, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                avatarImageView.setImageBitmap(bitmap)
+                avatarImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                avatarImageView.clipToOutline = true
+            } catch (e: Exception) {
+                avatarImageView.setImageResource(R.drawable.ic_default_avatar)
+            }
+        } else {
+            avatarImageView.setImageResource(R.drawable.ic_default_avatar)
         }
     }
 
     private fun observeViewModel() {
         viewModel.userData.observe(this) { user ->
             user?.let {
-                avatarText.text = it.avatar
                 usernameText.text = it.username
                 emailText.text = it.email
                 joinDateText.text = "Member since ${android.text.format.DateFormat.format("MMM dd, yyyy", it.createdAt)}"
@@ -165,6 +243,16 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 todayEarningsValue.text = "+${it.dailyCoins}"
                 todayGamesValue.text = it.totalGamesPlayed.toString()
                 weeklyEarningsValue.text = it.weeklyCoins.toString()
+
+                // Load avatar
+                loadAvatar(it)
+            }
+        }
+
+        viewModel.errorMessage.observe(this) { error ->
+            error?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.clearMessages()
             }
         }
     }
@@ -175,9 +263,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
-            R.id.nav_profile -> {
-
-            }
+            R.id.nav_profile -> { /* Already here */ }
             R.id.nav_leaderboard -> {
                 startActivity(Intent(this, LeaderboardActivity::class.java))
             }
@@ -188,67 +274,17 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 startActivity(Intent(this, WithdrawalActivity::class.java))
             }
             R.id.nav_settings -> {
-                showSettingsDialog()
-            }
-            R.id.nav_logout -> {
-                showLogoutConfirmationDialog()
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    private fun showSettingsDialog() {
-        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
-        builder.setTitle("Settings")
-        val view = layoutInflater.inflate(R.layout.dialog_settings, null)
-
-        val avatarPreview = view.findViewById<TextView>(R.id.avatarPreview)
-        val changeAvatarButton = view.findViewById<Button>(R.id.changeAvatarButton)
-        val avatarGridContainer = view.findViewById<LinearLayout>(R.id.avatarGridContainer)
-        val avatarGrid = view.findViewById<RecyclerView>(R.id.avatarGridRecyclerView)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = userManager.getUserData(currentUserId!!)
-            withContext(Dispatchers.Main) {
-                avatarPreview.text = result.getOrNull()?.avatar ?: "👤"
-            }
-        }
-
-        avatarGrid.layoutManager = GridLayoutManager(this, 4)
-        avatarGrid.adapter = AvatarAdapter { avatar ->
-            CoroutineScope(Dispatchers.IO).launch {
-                usersCollection.document(currentUserId!!).update("avatar", avatar).await()
-                withContext(Dispatchers.Main) {
-                    avatarPreview.text = avatar
-                    avatarGridContainer.visibility = View.GONE
-                    changeAvatarButton.text = "🔄 Change Avatar"
-                    avatarText.text = avatar
-                    loadUserProfileForNav()
-                }
-            }
-        }
-
-        changeAvatarButton.setOnClickListener {
-            if (avatarGridContainer.visibility == View.VISIBLE) {
-                avatarGridContainer.visibility = View.GONE
-                changeAvatarButton.text = "🔄 Change Avatar"
-            } else {
-                avatarGridContainer.visibility = View.VISIBLE
-                changeAvatarButton.text = "▼ Hide Avatar Selection"
-            }
-        }
-
-        builder.setView(view)
-        builder.setPositiveButton("Done") { dialog, _ -> dialog.dismiss() }
-        builder.show()
-    }
-
     private fun showLogoutConfirmationDialog() {
         AlertDialog.Builder(this, R.style.CustomAlertDialog)
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout? You'll need to login again to access your account.")
-            .setIcon(android.R.drawable.ic_dialog_alert)
             .setPositiveButton("Logout") { _, _ ->
                 performLogout()
             }
@@ -263,6 +299,11 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
         Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadUserData()
     }
 
     override fun onBackPressed() {

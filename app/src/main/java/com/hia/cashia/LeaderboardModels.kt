@@ -5,6 +5,7 @@ data class LeaderboardEntry(
     val userId: String = "",
     val username: String = "Anonymous",
     val avatar: String = "👤",
+    val avatarBase64: String = "",
     val totalCoins: Int = 0,
     val dailyCoins: Int = 0,
     val weeklyCoins: Int = 0,

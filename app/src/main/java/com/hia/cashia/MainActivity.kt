@@ -1,8 +1,6 @@
 package com.hia.cashia
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -11,8 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -23,7 +19,13 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import kotlin.math.min
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,10 +39,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navView: NavigationView
     private lateinit var toolbar: Toolbar
     private lateinit var toggle: ActionBarDrawerToggle
-    private lateinit var toolbarTitle: TextView  // Add this
 
     private lateinit var welcomeText: TextView
-    private lateinit var usernameText: TextView
+    private lateinit var usernameText: TextView  // This is the username display on home page
     private lateinit var coinBalanceText: TextView
     private lateinit var streakText: TextView
     private lateinit var dailyLoginCard: MaterialCardView
@@ -78,18 +79,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         observeViewModel()
         viewModel.loadUserData()
         loadUserProfileForNav()
-        requestNotificationPermission()
-        checkDailyLoginReminder()
+        loadUserDataForHome()  // Add this line to load username
     }
 
     private fun initViews() {
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
         toolbar = findViewById(R.id.toolbar)
-        toolbarTitle = findViewById(R.id.toolbarTitle)  // Initialize toolbar title
 
         welcomeText = findViewById(R.id.welcomeText)
-        usernameText = findViewById(R.id.usernameText)
+        usernameText = findViewById(R.id.usernameText)  // This is the TextView for username
         coinBalanceText = findViewById(R.id.coinBalanceText)
         streakText = findViewById(R.id.streakText)
 
@@ -104,52 +103,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         jackpotCard = findViewById(R.id.jackpotCard)
     }
 
-    // Add this function to check and send daily login reminder
-    private fun checkDailyLoginReminder() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val userId = currentUserId ?: return@launch
-                val snapshot = usersCollection.document(userId).get().await()
-                val lastLogin = snapshot.getString("lastLoginDate") ?: ""
-                val today = getTodayDate()
-                val fcmToken = snapshot.getString("fcmToken")
-
-                if (lastLogin != today && fcmToken != null && fcmToken.isNotEmpty()) {
-                    // User hasn't logged in today, send reminder
-                    val notification = mapOf(
-                        "token" to fcmToken,
-                        "title" to "🔔 Daily Login Bonus",
-                        "body" to "Don't miss your daily streak! Login now to claim your bonus!",
-                        "type" to "daily_login",
-                        "timestamp" to System.currentTimeMillis()
-                    )
-
-                    usersCollection.document("notifications").collection("to_send").add(notification)
-
-                    // Show local notification
-                    showDailyLoginReminder()
-                }
-            } catch (e: Exception) {
-                // Ignore errors
-            }
-        }
-    }
-
-    private fun showDailyLoginReminder() {
-        // This will be handled by the notification system
-        // For now, we'll just log
-        android.util.Log.d("MainActivity", "Daily login reminder sent")
-    }
-
-    private fun getTodayDate(): String {
-        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-        return dateFormat.format(java.util.Date())
-    }
-
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbarTitle.text = "Home"  // Now it's properly initialized
+        findViewById<TextView>(R.id.toolbarTitle).text = "Home"
     }
 
     private fun setupDrawer() {
@@ -163,6 +120,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navView.setNavigationItemSelectedListener(this)
     }
 
+    // Add this new function to load user data for home page
+    private fun loadUserDataForHome() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = userManager.getUserData(currentUserId!!)
+            withContext(Dispatchers.Main) {
+                if (result.isSuccess) {
+                    val user = result.getOrNull()
+                    user?.let {
+                        // Update username on home page
+                        usernameText.text = it.username
+                        welcomeText.text = "Welcome back,"
+                    }
+                }
+            }
+        }
+    }
+
     private fun loadUserProfileForNav() {
         CoroutineScope(Dispatchers.IO).launch {
             val result = userManager.getUserData(currentUserId!!)
@@ -170,15 +144,68 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 if (result.isSuccess) {
                     val user = result.getOrNull()
                     val headerView = navView.getHeaderView(0)
-                    headerView.findViewById<TextView>(R.id.navAvatar).text = user?.avatar ?: "👤"
-                    headerView.findViewById<TextView>(R.id.navUsername).text = user?.username ?: "User"
-                    headerView.findViewById<TextView>(R.id.navEmail).text = user?.email ?: ""
+                    val navAvatarEmoji = headerView.findViewById<TextView>(R.id.navAvatarEmoji)
+                    val navAvatarImage = headerView.findViewById<ImageView>(R.id.navAvatarImage)
+                    val navUsername = headerView.findViewById<TextView>(R.id.navUsername)
+                    val navEmail = headerView.findViewById<TextView>(R.id.navEmail)
 
-                    welcomeText.text = "Welcome back,"
-                    usernameText.text = user?.username ?: "User"
+                    user?.let {
+                        navUsername.text = it.username
+                        navEmail.text = it.email
+
+                        // Handle avatar display - round shape
+                        if (it.avatarBase64.isNotEmpty()) {
+                            // Show custom image avatar
+                            navAvatarEmoji.visibility = View.GONE
+                            navAvatarImage.visibility = View.VISIBLE
+                            try {
+                                val imageBytes = android.util.Base64.decode(it.avatarBase64, android.util.Base64.DEFAULT)
+                                val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
+                                // Create circular bitmap for better quality
+                                val circularBitmap = getCircularBitmap(bitmap)
+                                navAvatarImage.setImageBitmap(circularBitmap)
+                                navAvatarImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                            } catch (e: Exception) {
+                                // Fallback to emoji
+                                navAvatarEmoji.visibility = View.VISIBLE
+                                navAvatarImage.visibility = View.GONE
+                                navAvatarEmoji.text = it.avatar
+                            }
+                        } else {
+                            // Show emoji avatar
+                            navAvatarEmoji.visibility = View.VISIBLE
+                            navAvatarImage.visibility = View.GONE
+                            navAvatarEmoji.text = it.avatar
+                        }
+                    }
                 }
             }
         }
+    }
+
+    // Helper function to create circular bitmap
+    private fun getCircularBitmap(bitmap: Bitmap): Bitmap {
+        val size = min(bitmap.width, bitmap.height)
+        val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(output)
+        val paint = android.graphics.Paint()
+        val rect = android.graphics.Rect(0, 0, size, size)
+
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+        paint.xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN)
+
+        val srcRect = android.graphics.Rect(
+            (bitmap.width - size) / 2,
+            (bitmap.height - size) / 2,
+            (bitmap.width + size) / 2,
+            (bitmap.height + size) / 2
+        )
+        canvas.drawBitmap(bitmap, srcRect, rect, paint)
+
+        return output
     }
 
     private fun setupClickListeners() {
@@ -221,6 +248,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     else -> 10
                 }
                 dailyBonusText.text = "Claim your +$todayBonus coins"
+
+                // Update username in case it changed
+                usernameText.text = it.username
             }
         }
 
@@ -252,19 +282,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    // Call this after user login
-    private fun scheduleDailyLoginReminder() {
-        CoroutineScope(Dispatchers.IO).launch {
-            // Check and send reminder if needed
-            val userId = currentUserId ?: return@launch
-            userManager.sendDailyLoginReminder(userId)
-        }
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
-
+                drawerLayout.closeDrawer(GravityCompat.START)
             }
             R.id.nav_profile -> {
                 startActivity(Intent(this, ProfileActivity::class.java))
@@ -279,100 +300,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(Intent(this, WithdrawalActivity::class.java))
             }
             R.id.nav_settings -> {
-                showSettingsDialog()
-            }
-            R.id.nav_logout -> {
-                showLogoutConfirmationDialog()
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    private fun showSettingsDialog() {
-        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
-        builder.setTitle("Settings")
-
-        val view = layoutInflater.inflate(R.layout.dialog_settings, null)
-        val avatarPreview = view.findViewById<TextView>(R.id.avatarPreview)
-        val changeAvatarButton = view.findViewById<Button>(R.id.changeAvatarButton)
-        val avatarGridContainer = view.findViewById<LinearLayout>(R.id.avatarGridContainer)
-        val avatarGrid = view.findViewById<RecyclerView>(R.id.avatarGridRecyclerView)
-        val changeUsernameButton = view.findViewById<Button>(R.id.changeUsernameButton)
-
-        val userId = currentUserId ?: return
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = userManager.getUserData(userId)
-            withContext(Dispatchers.Main) {
-                if (result.isSuccess) {
-                    avatarPreview.text = result.getOrNull()?.avatar ?: "👤"
-                }
-            }
-        }
-
-        avatarGrid.layoutManager = GridLayoutManager(this, 4)
-        avatarGrid.adapter = AvatarAdapter { avatar ->
-            CoroutineScope(Dispatchers.IO).launch {
-                usersCollection.document(userId).update("avatar", avatar).await()
-                withContext(Dispatchers.Main) {
-                    avatarPreview.text = avatar
-                    avatarGridContainer.visibility = View.GONE
-                    changeAvatarButton.text = "🔄 Change Avatar"
-                    loadUserProfileForNav()
-                }
-            }
-        }
-
-        changeAvatarButton.setOnClickListener {
-            if (avatarGridContainer.visibility == View.VISIBLE) {
-                avatarGridContainer.visibility = View.GONE
-                changeAvatarButton.text = "🔄 Change Avatar"
-            } else {
-                avatarGridContainer.visibility = View.VISIBLE
-                changeAvatarButton.text = "▼ Hide Avatar Selection"
-            }
-        }
-
-        changeUsernameButton.setOnClickListener {
-            showEditUsernameDialog()
-        }
-
-        builder.setView(view)
-        builder.setPositiveButton("Done") { dialog, _ -> dialog.dismiss() }
-        builder.show()
-    }
-
-    private fun showEditUsernameDialog() {
-        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
-        builder.setTitle("Change Username")
-
-        val input = EditText(this)
-        input.hint = "Enter new username"
-        input.setBackgroundResource(R.drawable.edit_text_background)
-        input.setPadding(50, 30, 50, 30)
-
-        builder.setView(input)
-        builder.setPositiveButton("Save") { _, _ ->
-            val newUsername = input.text.toString().trim()
-            if (newUsername.length >= 3) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    usersCollection.document(currentUserId!!).update("username", newUsername).await()
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@MainActivity, "Username updated!", Toast.LENGTH_SHORT).show()
-                        loadUserProfileForNav()
-                    }
-                }
-            }
-        }
-        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
-        builder.show()
-    }
-
     private fun showLogoutConfirmationDialog() {
         AlertDialog.Builder(this, R.style.CustomAlertDialog)
-            .setTitle("Logout")
+            .setTitle("🚪 Logout")
             .setMessage("Are you sure you want to logout? You'll need to login again to access your account.")
-            .setIcon(android.R.drawable.ic_dialog_alert)
             .setPositiveButton("Logout") { _, _ ->
                 performLogout()
             }
@@ -389,35 +327,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
     }
 
-    private fun requestNotificationPermission() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    1001
-                )
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1001) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Notifications enabled!", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         viewModel.refreshData()
+        loadUserDataForHome()  // Refresh username when returning to home
         loadUserProfileForNav()
     }
 

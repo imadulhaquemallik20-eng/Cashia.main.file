@@ -21,9 +21,21 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import kotlin.math.min
 
 class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    // ============================================
+    // TEMPORARY BLOCK - Set to true to block ads, false to enable
+    // ============================================
+    private val isAdsBlocked = true  // Change to false to enable ads
+    // ============================================
 
     private lateinit var viewModel: WatchAdsViewModel
     private lateinit var auth: FirebaseAuth
@@ -38,6 +50,9 @@ class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var coinBalanceText: TextView
     private lateinit var adsRemainingText: TextView
     private lateinit var watchAdButton: Button
+    private lateinit var blockMessageCard: MaterialCardView
+    private lateinit var blockMessageTitle: TextView
+    private lateinit var blockMessageText: TextView
 
     private var currentUserId: String? = null
     private var remainingAdsToday = 50
@@ -63,10 +78,17 @@ class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         setupToolbar()
         setupDrawer()
         setupClickListeners()
-        observeViewModel()
-        viewModel.loadUserData()
+
+        if (isAdsBlocked) {
+            showTemporaryBlockMessage()
+        } else {
+            showAdsContent()
+            observeViewModel()
+            viewModel.loadUserData()
+            startAdCheck()
+        }
+
         loadUserProfileForNav()
-        startAdCheck()
     }
 
     private fun initViews() {
@@ -77,6 +99,9 @@ class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         coinBalanceText = findViewById(R.id.coinBalanceText)
         adsRemainingText = findViewById(R.id.adsRemainingText)
         watchAdButton = findViewById(R.id.watchAdButton)
+        blockMessageCard = findViewById(R.id.blockMessageCard)
+        blockMessageTitle = findViewById(R.id.blockMessageTitle)
+        blockMessageText = findViewById(R.id.blockMessageText)
     }
 
     private fun setupToolbar() {
@@ -103,21 +128,101 @@ class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 if (result.isSuccess) {
                     val user = result.getOrNull()
                     val headerView = navView.getHeaderView(0)
-                    headerView.findViewById<TextView>(R.id.navAvatar).text = user?.avatar ?: "👤"
-                    headerView.findViewById<TextView>(R.id.navUsername).text = user?.username ?: "User"
-                    headerView.findViewById<TextView>(R.id.navEmail).text = user?.email ?: ""
+                    val navAvatarEmoji = headerView.findViewById<TextView>(R.id.navAvatarEmoji)
+                    val navAvatarImage = headerView.findViewById<ImageView>(R.id.navAvatarImage)
+                    val navUsername = headerView.findViewById<TextView>(R.id.navUsername)
+                    val navEmail = headerView.findViewById<TextView>(R.id.navEmail)
+
+                    user?.let {
+                        navUsername.text = it.username
+                        navEmail.text = it.email
+
+                        // Handle avatar display - round shape
+                        if (it.avatarBase64.isNotEmpty()) {
+                            // Show custom image avatar
+                            navAvatarEmoji.visibility = View.GONE
+                            navAvatarImage.visibility = View.VISIBLE
+                            try {
+                                val imageBytes = android.util.Base64.decode(it.avatarBase64, android.util.Base64.DEFAULT)
+                                val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
+                                // Create circular bitmap for better quality
+                                val circularBitmap = getCircularBitmap(bitmap)
+                                navAvatarImage.setImageBitmap(circularBitmap)
+                                navAvatarImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                            } catch (e: Exception) {
+                                // Fallback to emoji
+                                navAvatarEmoji.visibility = View.VISIBLE
+                                navAvatarImage.visibility = View.GONE
+                                navAvatarEmoji.text = it.avatar
+                            }
+                        } else {
+                            // Show emoji avatar
+                            navAvatarEmoji.visibility = View.VISIBLE
+                            navAvatarImage.visibility = View.GONE
+                            navAvatarEmoji.text = it.avatar
+                        }
+                    }
                 }
             }
         }
     }
 
+    // Helper function to create circular bitmap
+    private fun getCircularBitmap(bitmap: Bitmap): Bitmap {
+        val size = min(bitmap.width, bitmap.height)
+        val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(output)
+        val paint = android.graphics.Paint()
+        val rect = android.graphics.Rect(0, 0, size, size)
+
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+        paint.xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN)
+
+        val srcRect = android.graphics.Rect(
+            (bitmap.width - size) / 2,
+            (bitmap.height - size) / 2,
+            (bitmap.width + size) / 2,
+            (bitmap.height + size) / 2
+        )
+        canvas.drawBitmap(bitmap, srcRect, rect, paint)
+
+        return output
+    }
+
+    private fun showTemporaryBlockMessage() {
+        // Hide ad-related content
+        coinBalanceText.visibility = View.GONE
+        adsRemainingText.visibility = View.GONE
+        watchAdButton.visibility = View.GONE
+
+        // Show block message
+        blockMessageCard.visibility = View.VISIBLE
+    }
+
+    private fun showAdsContent() {
+        // Hide block message
+        blockMessageCard.visibility = View.GONE
+
+        // Show ad-related content
+        coinBalanceText.visibility = View.VISIBLE
+        adsRemainingText.visibility = View.VISIBLE
+        watchAdButton.visibility = View.VISIBLE
+    }
+
     private fun setupClickListeners() {
         watchAdButton.setOnClickListener {
-            showRewardedAd()
+            if (!isAdsBlocked) {
+                showRewardedAd()
+            }
         }
     }
 
     private fun startAdCheck() {
+        if (isAdsBlocked) return
+
         adCheckRunnable = object : Runnable {
             override fun run() {
                 if (remainingAdsToday > 0) {
@@ -150,7 +255,7 @@ class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         viewModel.adStatus.observe(this) { status ->
             status?.let {
                 remainingAdsToday = it.remainingAds
-                adsRemainingText.text = "Today: ${it.remainingAds}/50 ads"
+                adsRemainingText.text = "Today: ${it.remainingAds}/50 ads remaining"
 
                 if (it.remainingAds <= 0) {
                     watchAdButton.isEnabled = false
@@ -163,7 +268,7 @@ class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         viewModel.adResult.observe(this) { result ->
             result?.let {
                 if (it.success) {
-                    Toast.makeText(this, " ${it.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "🎉 ${it.message}", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
                 }
@@ -188,6 +293,8 @@ class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     private fun showRewardedAd() {
+        if (isAdsBlocked) return
+
         if (remainingAdsToday <= 0) {
             Toast.makeText(this, "Daily limit reached! Come back tomorrow.", Toast.LENGTH_SHORT).show()
             return
@@ -224,126 +331,27 @@ class WatchAdsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 startActivity(Intent(this, WithdrawalActivity::class.java))
             }
             R.id.nav_settings -> {
-                showSettingsDialog()
-            }
-            R.id.nav_logout -> {
-                showLogoutConfirmationDialog()
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    private fun showSettingsDialog() {
-        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
-        builder.setTitle("Settings")
-
-        val view = layoutInflater.inflate(R.layout.dialog_settings, null)
-        val avatarPreview = view.findViewById<TextView>(R.id.avatarPreview)
-        val changeAvatarButton = view.findViewById<Button>(R.id.changeAvatarButton)
-        val avatarGridContainer = view.findViewById<LinearLayout>(R.id.avatarGridContainer)
-        val avatarGrid = view.findViewById<RecyclerView>(R.id.avatarGridRecyclerView)
-        val changeUsernameButton = view.findViewById<Button>(R.id.changeUsernameButton)
-
-        val userId = currentUserId ?: return
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = userManager.getUserData(userId)
-            withContext(Dispatchers.Main) {
-                if (result.isSuccess) {
-                    avatarPreview.text = result.getOrNull()?.avatar ?: "👤"
-                }
-            }
-        }
-
-        avatarGrid.layoutManager = GridLayoutManager(this, 4)
-        avatarGrid.adapter = AvatarAdapter { avatar ->
-            CoroutineScope(Dispatchers.IO).launch {
-                usersCollection.document(userId).update("avatar", avatar).await()
-                withContext(Dispatchers.Main) {
-                    avatarPreview.text = avatar
-                    avatarGridContainer.visibility = View.GONE
-                    changeAvatarButton.text = "🔄 Change Avatar"
-                    loadUserProfileForNav()
-                }
-            }
-        }
-
-        changeAvatarButton.setOnClickListener {
-            if (avatarGridContainer.visibility == View.VISIBLE) {
-                avatarGridContainer.visibility = View.GONE
-                changeAvatarButton.text = "🔄 Change Avatar"
-            } else {
-                avatarGridContainer.visibility = View.VISIBLE
-                changeAvatarButton.text = "▼ Hide Avatar Selection"
-            }
-        }
-
-        changeUsernameButton.setOnClickListener {
-            showEditUsernameDialog()
-        }
-
-        builder.setView(view)
-        builder.setPositiveButton("Done") { dialog, _ -> dialog.dismiss() }
-        builder.show()
-    }
-
-    private fun showEditUsernameDialog() {
-        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog)
-        builder.setTitle("Change Username")
-
-        val input = EditText(this)
-        input.hint = "Enter new username"
-        input.setBackgroundResource(R.drawable.edit_text_background)
-        input.setPadding(50, 30, 50, 30)
-
-        builder.setView(input)
-        builder.setPositiveButton("Save") { _, _ ->
-            val newUsername = input.text.toString().trim()
-            if (newUsername.length >= 3) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    usersCollection.document(currentUserId!!).update("username", newUsername).await()
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@WatchAdsActivity, "Username updated!", Toast.LENGTH_SHORT).show()
-                        loadUserProfileForNav()
-                    }
-                }
-            }
-        }
-        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
-        builder.show()
-    }
-
-    private fun showLogoutConfirmationDialog() {
-        AlertDialog.Builder(this, R.style.CustomAlertDialog)
-            .setTitle("Logout")
-            .setMessage("Are you sure you want to logout? You'll need to login again to access your account.")
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setPositiveButton("Logout") { _, _ ->
-                performLogout()
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    private fun performLogout() {
-        auth.signOut()
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
-        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
-    }
-
     override fun onResume() {
         super.onResume()
-        IronSourceManager.onResume(this)
-        viewModel.loadUserData()
-        updateButtonState()
+        if (!isAdsBlocked) {
+            IronSourceManager.onResume(this)
+            viewModel.loadUserData()
+            updateButtonState()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        IronSourceManager.onPause(this)
+        if (!isAdsBlocked) {
+            IronSourceManager.onPause(this)
+        }
     }
 
     override fun onDestroy() {

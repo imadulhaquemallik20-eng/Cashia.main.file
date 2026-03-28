@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,7 +38,6 @@ class LeaderboardViewModel : ViewModel() {
     val selectedCategory: LiveData<LeaderboardCategory> = _selectedCategory
 
     private val currentUserId = UserManager().getCurrentUserId()
-    private var previousUserRank = -1
 
     init {
         loadLeaderboard(LeaderboardCategory.ALL_TIME)
@@ -77,6 +75,7 @@ class LeaderboardViewModel : ViewModel() {
                     val userId = document.id
                     val username = document.getString("username") ?: "Anonymous"
                     val avatar = document.getString("avatar") ?: "👤"
+                    val avatarBase64 = document.getString("avatarBase64") ?: ""  // Add this line
 
                     val totalCoins = when (category) {
                         LeaderboardCategory.DAILY -> document.getLong("dailyCoins")?.toInt() ?: 0
@@ -93,6 +92,7 @@ class LeaderboardViewModel : ViewModel() {
                             userId = userId,
                             username = username,
                             avatar = avatar,
+                            avatarBase64 = avatarBase64,  // Add this line
                             totalCoins = totalCoins,
                             dailyCoins = dailyCoins,
                             weeklyCoins = weeklyCoins,
@@ -105,15 +105,6 @@ class LeaderboardViewModel : ViewModel() {
 
                 // Find current user's rank
                 val currentUserEntry = entries.find { it.userId == currentUserId }
-
-                if (currentUserEntry != null) {
-                    val currentRank = currentUserEntry.rank
-                    if (previousUserRank != -1 && currentRank < previousUserRank) {
-                        // User improved their rank! Send notification
-                        sendRankImprovementNotification(currentRank, previousUserRank)
-                    }
-                    previousUserRank = currentRank
-                }
 
                 withContext(Dispatchers.Main) {
                     _leaderboardEntries.value = entries
@@ -130,48 +121,6 @@ class LeaderboardViewModel : ViewModel() {
         }
     }
 
-    // Add this function to send rank improvement notification
-    private fun sendRankImprovementNotification(newRank: Int, oldRank: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val userId = currentUserId ?: return@launch
-                val snapshot = usersCollection.document(userId).get().await()
-                val fcmToken = snapshot.getString("fcmToken")
-
-                if (fcmToken != null && fcmToken.isNotEmpty()) {
-                    val notification = mapOf(
-                        "token" to fcmToken,
-                        "title" to "🏆 Rank Up!",
-                        "body" to "Congratulations! You've climbed from #$oldRank to #$newRank on the leaderboard!",
-                        "type" to "leaderboard",
-                        "newRank" to newRank.toString(),
-                        "oldRank" to oldRank.toString(),
-                        "timestamp" to System.currentTimeMillis()
-                    )
-
-                    val db = FirebaseFirestore.getInstance()
-                    db.collection("notifications").add(notification)
-
-                    // Also show local notification
-                    showLocalNotification(
-                        "🏆 Rank Up!",
-                        "You've climbed from #$oldRank to #$newRank on the leaderboard!"
-                    )
-                }
-            } catch (e: Exception) {
-                // Ignore errors
-            }
-        }
-    }
-
-    private fun showLocalNotification(title: String, message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            // This will be handled by a notification helper
-            // For now, we'll just log
-            android.util.Log.d("LeaderboardVM", "Notification: $title - $message")
-        }
-    }
-
     fun searchUser(username: String) {
         if (username.length < 3) {
             _searchResult.value = SearchResult(false, message = "Enter at least 3 characters")
@@ -182,7 +131,6 @@ class LeaderboardViewModel : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                // Search by username (case-insensitive)
                 val snapshot = usersCollection
                     .whereGreaterThanOrEqualTo("username", username)
                     .whereLessThanOrEqualTo("username", username + '\uf8ff')
@@ -197,6 +145,7 @@ class LeaderboardViewModel : ViewModel() {
                         userId = doc.id,
                         username = doc.getString("username") ?: "Anonymous",
                         avatar = doc.getString("avatar") ?: "👤",
+                        avatarBase64 = doc.getString("avatarBase64") ?: "",  // Add this line
                         totalCoins = doc.getLong("totalCoinsEarned")?.toInt() ?: 0,
                         dailyCoins = doc.getLong("dailyCoins")?.toInt() ?: 0,
                         weeklyCoins = doc.getLong("weeklyCoins")?.toInt() ?: 0,

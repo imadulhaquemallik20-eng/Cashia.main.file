@@ -5,6 +5,7 @@ data class User(
     val email: String = "",
     val username: String = "",
     val avatar: String = "👤",
+    val avatarBase64: String = "",  // For custom image avatars
     val coinBalance: Int = 0,
     val totalCoinsEarned: Int = 0,
     val lastLoginDate: String = "",
@@ -50,23 +51,19 @@ data class User(
     // Achievement fields
     val achievements: Map<String, Boolean> = emptyMap(),
     val achievementProgress: Map<String, Int> = emptyMap(),
-    // Transaction history (last 50)
-    val recentTransactions: List<Transaction> = emptyList(),
-    val totalWithdrawnCoins: Int = 0,
-    val totalWithdrawnCash: Double = 0.0,
-    val lastWithdrawalDate: Long = 0,
-    val upiId: String = "",
-
+    // Transaction history
+    val recentTransactions: List<Transaction> = emptyList()
 ) {
+    // Empty constructor needed for Firestore
     constructor() : this(
-        "", "", "", "👤", 0, 0, "", 0, 0L,
-        0, 0, "", 0, 0, 0, 0, "", 0, 0,  // scratch (fixed)
-        0, 0, 0, 0, 0, "", 0, 0,  // card flip (fixed)
-        0, 0, 0, 0, 0, 0, "",  // jackpot
+        "", "", "", "👤", "", 0, 0, "", 0, 0L,
+        0, 0, "",  // ad fields
+        0, 0, 0, 0, "", 0, 0,  // scratch card fields
+        0, 0, 0, 0, 0, "", 0, 0,  // card flip fields
+        0, 0, 0, 0, 0, 0, "",  // jackpot fields
         0, 0L,  // game stats
-        0, 0, "", "",  // leaderboard
+        0, 0, "", "",  // leaderboard fields
         emptyMap(), emptyMap(),  // achievements
-        emptyList(),  // transactions
-        0, 0.0, 0, ""
+        emptyList()  // transactions
     )
 }

@@ -129,4 +129,14 @@
         <item name="android:textColor">@color/premium_text_secondary</item>
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
+
+    <!-- Add this to your styles.xml inside the Theme.Cashia or as a separate style -->
+    <style name="PasswordToggleStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="passwordToggleEnabled">true</item>
+        <item name="passwordToggleTint">@color/premium_primary</item>
+        <item name="endIconMode">password_toggle</item>
+        <item name="endIconTint">@color/premium_primary</item>
+        <item name="colorControlNormal">@color/premium_primary</item>
+        <item name="colorControlActivated">@color/premium_primary</item>
+    </style>
 </resources>

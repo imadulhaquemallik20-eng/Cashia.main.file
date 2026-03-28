@@ -66,6 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Search username..."
+                    android:textColor="@color/premium_text_primary"
                     android:padding="12dp"
                     android:background="@null"/>
 

@@ -124,7 +124,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="📊 Today's Stats"
+                            android:text="• Today's Stats"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/premium_text_primary"
@@ -255,7 +255,8 @@
                     android:id="@+id/newGameButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="🔄 New Game"
+                    android:text="New Game"
+                    android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:backgroundTint="@color/premium_success"
@@ -335,7 +336,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="🎮 How to Play"
+                            android:text="• How to Play"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/premium_text_primary"

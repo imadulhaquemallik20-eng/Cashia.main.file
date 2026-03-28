@@ -10,6 +10,8 @@
     <!-- These permissions are only needed for API 23+ -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:name=".CasHIAApplication"
@@ -61,16 +63,52 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LoginActivity" android:exported="false" />
-        <activity android:name=".RegisterActivity" android:exported="false" />
-        <activity android:name=".ProfileActivity" android:exported="false" />
-        <activity android:name=".LeaderboardActivity" android:exported="false" />
-        <activity android:name=".AchievementsActivity" android:exported="false" />
-        <activity android:name=".WatchAdsActivity" android:exported="false" />
-        <activity android:name=".ScratchCardActivity" android:exported="false" />
-        <activity android:name=".CardFlipActivity" android:exported="false" />
-        <activity android:name=".JackpotActivity" android:exported="false" />
-        <activity android:name=".WithdrawalActivity" android:exported="false" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LeaderboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AchievementsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WatchAdsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ScratchCardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CardFlipActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JackpotActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WithdrawalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
 
     </application>
 

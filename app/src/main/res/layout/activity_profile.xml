@@ -59,7 +59,7 @@
                 <!-- Profile Header Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
                     app:cardElevation="8dp"
                     app:cardCornerRadius="24dp"
                     android:layout_marginBottom="20dp"
@@ -67,19 +67,19 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="140dp"
                         android:orientation="horizontal"
                         android:padding="20dp"
                         android:gravity="center_vertical"
                         android:background="@drawable/premium_gradient_header">
 
-                        <TextView
-                            android:id="@+id/avatarText"
+                        <!-- Change from TextView to ImageView -->
+                        <ImageView
+                            android:id="@+id/avatarImageView"
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:text="👤"
-                            android:textSize="42sp"
-                            android:gravity="center"
+                            android:src="@drawable/ic_default_avatar"
+                            android:scaleType="centerCrop"
                             android:background="@drawable/circle_background"
                             android:backgroundTint="#33FFFFFF"
                             android:layout_marginEnd="16dp"/>
@@ -523,7 +523,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📈 Today's Activity"
+                    android:text="Today's Activity"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/premium_text_primary"
@@ -645,6 +645,20 @@
                     </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>
+
+                <!-- Privacy Policy Link at Bottom -->
+                <TextView
+                    android:id="@+id/privacyPolicyFooter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Privacy Policy"
+                    android:textSize="12sp"
+                    android:textColor="@color/premium_primary"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginTop="8dp"/>
 
             </LinearLayout>
 

@@ -124,7 +124,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="📊 Today's Stats"
+                            android:text="• Today's Stats"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/premium_text_primary"
@@ -335,7 +335,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="💰 Paytable (3 of a kind)"
+                            android:text="• Paytable (3 of a kind)"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/premium_text_primary"
@@ -392,7 +392,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="🎰 How to Play"
+                            android:text="• How to Play"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/premium_text_primary"
